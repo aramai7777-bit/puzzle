@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ألغاز أنس الحسابية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff7ec;--bg2:#ffe3c2;--card:rgba(255,255,255,.92);--text:#2b2547;--muted:#7b7497;--border:rgba(255,122,69,.22);--brand:#ff6b6b;--brand2:#ff9f43;--ok:#12b886;--bad:#e03131;--shadow:0 10px 40px -14px rgba(255,107,107,.45);--a1:#ff6b6b;--a2:#14b8a6;--a3:#7c5cff;--a4:#f59f00}
+@media(prefers-color-scheme:dark){:root{--bg:#171227;--bg2:#2b1d4a;--card:rgba(40,31,70,.92);--text:#fff3e6;--muted:#bdb2da;--border:rgba(255,159,110,.25);--brand:#ff8a7a;--brand2:#ffb86b;--ok:#2dd4a0;--bad:#ff6b81;--shadow:0 10px 40px -14px rgba(0,0,0,.65);--a1:#ff8a7a;--a2:#2dd4bf;--a3:#a78bfa;--a4:#fbbf24}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;min-height:100vh;color:var(--text);font-family:"Cairo","Segoe UI",Tahoma,sans-serif;line-height:1.7;background:radial-gradient(900px 500px at 85% -10%,var(--bg2),transparent),radial-gradient(700px 400px at 5% 10%,var(--bg2),transparent),var(--bg)}
+.wrap{max-width:900px;margin:auto;padding:20px 16px 36px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:10px}
+.logo{font-weight:900;font-size:1.4rem;background:linear-gradient(135deg,var(--brand),var(--brand2),var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent}
+#back{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:12px;padding:8px 16px;font:700 .95rem inherit;font-family:inherit;cursor:pointer}
+.menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.gc{text-align:right;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:20px;padding:18px;cursor:pointer;box-shadow:var(--shadow);font-family:inherit;transition:.2s}
+.gc:hover{transform:translateY(-4px)}
+.gc b{font-size:2rem}.gc h3{margin:4px 0}.gc p{margin:0;color:var(--muted);font-size:.9rem}
+.gc small{display:block;margin-top:8px;color:var(--ok);font-weight:700}
+.pz{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:22px 16px;text-align:center;box-shadow:var(--shadow)}
+.pz h2{margin:0 0 6px}.m{color:var(--muted);margin:0 0 14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.b{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:14px;padding:10px 20px;font:700 1rem inherit;font-family:inherit;cursor:pointer;transition:.15s}
+.b:hover{transform:translateY(-2px)}
+.b.on{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent}
+.b.pri{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent}
+.big{font-size:1.9rem;min-width:76px;padding:12px}
+.op{font-size:1.6rem;min-width:64px}
+.msg{min-height:1.8em;font-weight:700;margin:10px 0}
+.chip{background:var(--border);border-radius:99px;padding:4px 16px;font-weight:700}
+.big2{font-size:2.2rem;font-weight:900;margin:14px 0;direction:ltr}
+input{font:700 1.5rem inherit;font-family:inherit;text-align:center;border:2px solid var(--border);background:transparent;color:var(--text);border-radius:14px;padding:8px;width:150px;outline:0}
+input:focus{border-color:var(--brand)}
+.mc{display:grid;grid-template-columns:repeat(3,76px);gap:8px;justify-content:center;margin:14px 0}
+.mc input{width:76px;height:76px;font-size:1.8rem}
+.mc input[readonly]{background:var(--border)}
+.pegs{display:flex;gap:10px;justify-content:center;margin:16px 0}
+.peg{flex:1;max-width:230px;height:190px;border:2px dashed var(--border);border-radius:16px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;padding-bottom:8px;cursor:pointer}
+.peg.on{border-color:var(--brand);background:var(--border)}
+.peg i{height:22px;border-radius:99px;display:block}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:340px;margin:14px auto}
+.tl{aspect-ratio:1;border:0;border-radius:14px;font:900 1.6rem inherit;font-family:inherit;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));cursor:pointer}
+footer{text-align:center;color:var(--muted);margin-top:24px;font-weight:600}
+
+/* ===== أنميشن ===== */
+@keyframes up{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{20%,60%{transform:translateX(9px)}40%,80%{transform:translateX(-9px)}}
+@keyframes float{50%{transform:translateY(-22px) rotate(10deg)}}
+@keyframes pulse{50%{transform:scale(1.2);background:var(--bad);color:#fff}}
+@keyframes shine{to{background-position:100% 0}}
+@keyframes fall{to{transform:translate(var(--x),105vh) rotate(720deg);opacity:.9}}
+body{overflow-x:hidden}
+body::before,body::after{content:"";position:fixed;z-index:-1;border-radius:50%;filter:blur(70px);opacity:.3;animation:float 9s ease-in-out infinite}
+body::before{width:260px;height:260px;background:var(--brand);top:8%;right:-60px}
+body::after{width:300px;height:300px;background:var(--a2);bottom:5%;left:-80px;animation-delay:-4s}
+.logo{background-size:200% 100%;animation:shine 4s ease-in-out infinite alternate}
+.gc{animation:up .5s backwards}
+.gc b{display:inline-block;transition:transform .3s}
+.gc:hover b{transform:scale(1.3) rotate(-8deg)}
+.b:active,.tl:active{transform:scale(.92)}
+.row .big:last-child{animation:pop .35s}
+.big2{animation:pop .5s}
+.msg.ok{animation:pop .45s;color:var(--ok)}
+.msg.no{animation:shake .4s;color:var(--bad)}
+.chip.low{animation:pulse .7s infinite}
+.peg i:first-child{animation:pop .3s}
+.tl{transition:transform .15s,filter .15s}
+.tl:hover{transform:scale(1.07);filter:brightness(1.1)}
+input{transition:box-shadow .2s,border-color .2s}
+input:focus{box-shadow:0 0 0 4px rgba(255,107,107,.3)}
+.cf{position:fixed;top:-14px;width:10px;height:14px;border-radius:2px;z-index:99;pointer-events:none;animation:fall 1.9s ease-in forwards}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ===== ألوان مبهجة ===== */
+.gc:nth-child(4n+1){--c:var(--a1)}
+.gc:nth-child(4n+2){--c:var(--a2)}
+.gc:nth-child(4n+3){--c:var(--a3)}
+.gc:nth-child(4n+4){--c:var(--a4)}
+.gc{border-top:5px solid var(--c,var(--a1))}
+.gc h3{color:var(--c)}
+.gc b{width:58px;height:58px;border-radius:18px;display:inline-flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--c) 18%,transparent)}
+.chip{background:rgba(255,159,67,.22)}
+.big2{color:var(--a3)}
+.tl:nth-child(4n+1){background:linear-gradient(135deg,#ff6b6b,#ff9f43)}
+.tl:nth-child(4n+2){background:linear-gradient(135deg,#0ea5a0,#2dd4bf)}
+.tl:nth-child(4n+3){background:linear-gradient(135deg,#7c5cff,#a78bfa)}
+.tl:nth-child(4n+4){background:linear-gradient(135deg,#f59f00,#ffc53d)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="logo">🧮 ألغاز أنس الحسابية</div><button id="back" hidden>→ القائمة</button></header>
+  <main id="st"></main>
+  <footer>Eng: Anas</footer>
+</div>
+<script>
+var $=function(i){return document.getElementById(i)},st=$("st"),TM;
+var R=function(n){return Math.floor(Math.random()*n)};
+var S={};try{S=JSON.parse(localStorage.getItem("mp")||"{}")}catch(e){}
+function best(id,v,low){if(S[id]==null||(low?v<S[id]:v>S[id])){S[id]=v;try{localStorage.setItem("mp",JSON.stringify(S))}catch(e){}}}
+function boom(){for(var i=0;i<45;i++){var d=document.createElement("i");d.className="cf";d.style.cssText="left:"+R(100)+"vw;background:hsl("+R(360)+",80%,60%);animation-delay:"+R(400)+"ms;--x:"+(R(240)-120)+"px";document.body.appendChild(d);setTimeout(function(e){e.remove()},2500,d)}}
+function fb(id,good,txt){var e=$(id);e.className="msg";void e.offsetWidth;e.className="msg "+(good?"ok":"no");e.textContent=txt}
+function enter(){st.style.animation="none";void st.offsetWidth;st.style.animation="up .4s backwards"}
+function stop(){clearInterval(TM);st.onclick=null;st.onkeydown=null}
+var G=[
+{id:"g24",i:"🎯",n:"لعبة 24",d:"اوصل لـ 24 بالأرقام الأربعة والعمليات",u:"حليت # لغز",f:g24},
+{id:"gq",i:"⚡",n:"الحساب السريع",d:"60 ثانية، جاوب على أكبر عدد من العمليات",u:"أعلى نتيجة: #",f:gq},
+{id:"gp",i:"🔢",n:"تكملة النمط",d:"اعرف الرقم الجاي في السلسلة",u:"أفضل نتيجة: # / 8",f:gp},
+{id:"gm",i:"✨",n:"المربع السحري",d:"كمّل المربع ومجموع كل صف وعمود وقطر 15",u:"حليت # مربع",f:gm},
+{id:"h3",i:"🗼",n:"برج هانوي",d:"انقل الأقراص بأقل عدد حركات",u:"أقل حركات: #",f:function(){gh(3)}},
+{id:"g15",i:"🧩",n:"لغز الـ 15",d:"رتّب البلاطات من 1 لـ 15",u:"أقل حركات: #",f:g15}
+];
+function home(){
+  stop();$("back").hidden=true;
+  st.innerHTML='<div class="menu">'+G.map(function(g,k){return '<button class="gc" style="animation-delay:'+k*80+'ms" onclick="play('+k+')"><b>'+g.i+'</b><h3>'+g.n+'</h3><p>'+g.d+'</p><small>'+(S[g.id]!=null?g.u.replace("#",S[g.id]):"")+'</small></button>'}).join("")+'</div>';
+}
+function play(k){stop();$("back").hidden=false;enter();G[k].f()}
+$("back").onclick=home;
+
+/* ---------- لعبة 24 ---------- */
+function ok24(a){
+  if(a.length==1)return Math.abs(a[0]-24)<1e-6;
+  for(var i=0;i<a.length;i++)for(var j=0;j<a.length;j++){
+    if(i==j)continue;
+    var r=a.filter(function(_,k){return k!=i&&k!=j}),x=a[i],y=a[j],c=[x+y,x-y,x*y];
+    if(y)c.push(x/y);
+    for(var m=0;m<c.length;m++)if(ok24(r.concat(c[m])))return true;
+  }
+  return false;
+}
+function g24(){
+  var o,n,sel,op,msg="";
+  function f(x){return +x.toFixed(2)}
+  function nw(){do{o=[0,0,0,0].map(function(){return 1+R(9)})}while(!ok24(o));rs()}
+  function rs(){n=o.slice();sel=null;op=null;msg="";dr()}
+  function dr(){
+    var one=n.length==1,win=one&&Math.abs(n[0]-24)<1e-6;
+    st.innerHTML='<div class="pz"><h2>🎯 لعبة 24</h2><p class="m">اضغط رقم، بعده عملية، بعده رقم تاني.. لحد ما توصل لـ 24</p><div class="row">'+
+    n.map(function(x,i){return '<button class="b big'+(sel===i?' on':'')+'" data-i="'+i+'">'+f(x)+'</button>'}).join("")+'</div><div class="row">'+
+    ["+","−","×","÷"].map(function(s,i){return '<button class="b op'+(op===i?' on':'')+'" data-o="'+i+'">'+s+'</button>'}).join("")+'</div><div class="msg'+(win?' ok':one?' no':'')+'">'+
+    (win?"🎉 برافو! وصلت لـ 24":one?"❌ الناتج "+f(n[0])+"، جرّب تاني":msg)+'</div><div class="row"><button class="b pri" id="nw">لغز جديد</button><button class="b" id="rs">↺ من الأول</button></div></div>';
+  }
+  st.onclick=function(e){
+    var b=e.target.closest("button");if(!b)return;
+    if(b.id=="rs")return rs();
+    if(b.id=="nw")return nw();
+    if(b.dataset.o!=null){if(sel!=null){op=+b.dataset.o;dr()}return}
+    if(b.dataset.i!=null){
+      var i=+b.dataset.i;
+      if(sel==null||op==null){sel=i;dr();return}
+      if(i==sel)return;
+      var x=n[sel],y=n[i];
+      if(op==3&&y===0){msg="مينفعش القسمة على صفر";sel=null;op=null;dr();return}
+      var r=[x+y,x-y,x*y,x/y][op];
+      n=n.filter(function(_,k){return k!=sel&&k!=i}).concat(r);
+      sel=null;op=null;
+      if(n.length==1&&Math.abs(n[0]-24)<1e-6){best("g24",(S.g24||0)+1);boom()}
+      dr();
+    }
+  };
+  nw();
+}
+
+/* ---------- الحساب السريع ---------- */
+function gq(){
+  var T=60,sc=0,a;
+  st.innerHTML='<div class="pz"><h2>⚡ الحساب السريع</h2><div class="row"><span class="chip">⏱ <b id="t">60</b></span><span class="chip">✅ <b id="sc">0</b></span></div><div class="big2" id="q"></div><input id="a" type="number" inputmode="numeric" autocomplete="off"><div class="msg" id="mg">اكتب الإجابة واضغط Enter</div></div>';
+  function q(){
+    var l=1+Math.floor(sc/4),x=1+R(9*l),y=1+R(9*l),o=R(3);
+    if(o==1&&y>x){var z=x;x=y;y=z}
+    if(o==2){x=1+R(3+l);y=1+R(9)}
+    a=[x+y,x-y,x*y][o];
+    $("q").textContent=x+" "+["+","−","×"][o]+" "+y+" = ؟";$("q").style.animation="none";void $("q").offsetWidth;$("q").style.animation="pop .3s";
+    $("a").value="";$("a").focus();
+  }
+  q();
+  TM=setInterval(function(){
+    T--;$("t").textContent=T;if(T<=10)$("t").parentNode.classList.add("low");
+    if(T<=0){
+      clearInterval(TM);best("gq",sc);if(sc>=10)boom();
+      st.innerHTML='<div class="pz"><h2>⏱ خلص الوقت</h2><div class="big2">'+sc+' إجابة صح</div><button class="b pri" id="again">العب تاني</button></div>';
+      st.onclick=function(e){if(e.target.id=="again")gq()};
+      st.onkeydown=null;
+    }
+  },1000);
+  st.onkeydown=function(e){
+    if(e.key=="Enter"&&e.target.id=="a"&&e.target.value!==""){
+      var ok=+e.target.value===a;
+      if(ok){sc++;$("sc").textContent=sc}
+      fb("mg",ok,ok?"✅ صح":"❌ الصح كان "+a);
+      q();
+    }
+  };
+}
+
+/* ---------- تكملة النمط ---------- */
+function gp(){
+  var rd=0,ok=0,ans,busy=false;
+  function nx(){
+    busy=false;
+    if(rd==8){
+      best("gp",ok);if(ok>=6)boom();
+      st.innerHTML='<div class="pz"><h2>🔢 النتيجة</h2><div class="big2">'+ok+' / 8</div><button class="b pri" id="again">العب تاني</button></div>';
+      st.onclick=function(e){if(e.target.id=="again")gp()};st.onkeydown=null;return;
+    }
+    rd++;
+    var ty=R(4),s=[],a0=1+R(9),i;
+    if(ty==0){var d=2+R(7);for(i=0;i<5;i++)s.push(a0+d*i)}
+    else if(ty==1){var m=2+R(2);for(i=0;i<5;i++)s.push(a0*Math.pow(m,i))}
+    else if(ty==2){var c=R(5);for(i=0;i<5;i++)s.push(Math.pow(i+1+c,2))}
+    else{var y=a0+1+R(4);s=[a0,y];for(i=2;i<5;i++)s.push(s[i-1]+s[i-2])}
+    ans=s.pop();
+    st.innerHTML='<div class="pz"><h2>🔢 تكملة النمط</h2><p class="m">سؤال '+rd+' من 8</p><div class="big2">'+s.join(" ، ")+' ، ؟</div><input id="a" type="number" inputmode="numeric" autocomplete="off"><div class="row"><button class="b pri" id="go">تأكيد</button></div><div class="msg" id="mg"></div></div>';
+    $("a").focus();
+  }
+  function sub(){
+    var v=$("a").value;if(v===""||busy)return;busy=true;
+    var g=+v===ans;if(g)ok++;
+    fb("mg",g,g?"✅ صح":"❌ الصح كان "+ans);
+    setTimeout(nx,900);
+  }
+  st.onclick=function(e){if(e.target.id=="go")sub()};
+  st.onkeydown=function(e){if(e.key=="Enter"&&e.target.id=="a")sub()};
+  nx();
+}
+
+/* ---------- المربع السحري ---------- */
+function gm(){
+  var g=[[2,7,6],[9,5,1],[4,3,8]],k=R(4),i;
+  for(i=0;i<k;i++){var p=g;g=[0,1,2].map(function(r){return[0,1,2].map(function(c){return p[2-c][r]})})}
+  if(R(2))g=g.map(function(r){return r.slice().reverse()});
+  var fl=g.reduce(function(a,r){return a.concat(r)},[]),sh=[];
+  while(sh.length<4){var x=R(9);if(sh.indexOf(x)<0)sh.push(x)}
+  var cells=fl.map(function(v,j){return sh.indexOf(j)>-1?'<input value="'+v+'" readonly>':'<input type="number" min="1" max="9" inputmode="numeric">'}).join("");
+  st.innerHTML='<div class="pz"><h2>✨ المربع السحري</h2><p class="m">استخدم الأرقام من 1 لـ 9 مرة واحدة، ومجموع كل صف وعمود وقطر = 15</p><div class="mc">'+cells+'</div><div class="msg" id="mg"></div><div class="row"><button class="b pri" id="ck">تحقق</button><button class="b" id="nw">مربع جديد</button></div></div>';
+  var L=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  st.onclick=function(e){
+    if(e.target.id=="nw")return gm();
+    if(e.target.id!="ck")return;
+    var v=[].map.call(st.querySelectorAll(".mc input"),function(x){return x.value===""?0:+x.value});
+    if(v.indexOf(0)>-1){fb("mg",0,"كمّل كل الخانات الأول");return}
+    var uniq=v.slice().sort().join("")=="123456789";
+    if(!uniq){fb("mg",0,"❌ الأرقام لازم تكون من 1 لـ 9 ومن غير تكرار");return}
+    var good=L.every(function(l){return v[l[0]]+v[l[1]]+v[l[2]]==15});
+    fb("mg",good,good?"🎉 برافو! مربع سحري صح":"❌ فيه صف أو عمود أو قطر مجموعه مش 15");
+    if(good){best("gm",(S.gm||0)+1);boom()}
+  };
+}
+
+/* ---------- برج هانوي ---------- */
+function gh(n){
+  var p=[[],[],[]],sel=null,mv=0,msg="",i;
+  for(i=n;i>0;i--)p[0].push(i);
+  function dr(){
+    var win=p[2].length==n;
+    st.innerHTML='<div class="pz"><h2>🗼 برج هانوي</h2><div class="row">'+[3,4,5].map(function(x){return '<button class="b'+(x==n?' on':'')+'" data-n="'+x+'">'+x+' أقراص</button>'}).join("")+'</div><p class="m">انقل كل الأقراص للعمود الأخير، ومتحطش قرص كبير فوق صغير. أقل حركات ممكنة: '+(Math.pow(2,n)-1)+'</p><div class="pegs">'+
+    p.map(function(d,i){return '<div class="peg'+(sel===i?' on':'')+'" data-p="'+i+'">'+d.slice().reverse().map(function(x){return '<i style="width:'+(36+x*22)+'px;background:hsl('+(x*55)+',70%,55%)"></i>'}).join("")+'</div>'}).join("")+
+    '</div><div class="msg'+(win?' ok':msg?' no':'')+'">الحركات: '+mv+(win?' — 🎉 خلصتها!':msg?' — '+msg:'')+'</div></div>';
+  }
+  st.onclick=function(e){
+    var nb=e.target.closest("[data-n]");if(nb)return gh(+nb.dataset.n);
+    var pe=e.target.closest("[data-p]");if(!pe||p[2].length==n)return;
+    var i=+pe.dataset.p;msg="";
+    if(sel==null){if(p[i].length)sel=i}
+    else if(sel==i)sel=null;
+    else{
+      var a=p[sel],t=p[i];
+      if(!t.length||a[a.length-1]<t[t.length-1]){
+        t.push(a.pop());mv++;sel=null;
+        if(p[2].length==n){best("h"+n,mv,1);boom()}
+      }else msg="❌ مينفعش قرص كبير فوق صغير";
+    }
+    dr();
+  };
+  dr();
+}
+
+/* ---------- لغز الـ 15 ---------- */
+function g15(){
+  var t=[],b=15,mv=0,i;
+  for(i=1;i<16;i++)t.push(i);t.push(0);
+  function nb(b){var r=[];if(b%4)r.push(b-1);if(b%4<3)r.push(b+1);if(b>3)r.push(b-4);if(b<12)r.push(b+4);return r}
+  for(i=0;i<200;i++){var c=nb(b),j=c[R(c.length)];t[b]=t[j];t[j]=0;b=j}
+  function win(){for(var k=0;k<15;k++)if(t[k]!=k+1)return false;return true}
+  function dr(){
+    st.innerHTML='<div class="pz"><h2>🧩 لغز الـ 15</h2><p class="m">اضغط على البلاطة اللي جنب الخانة الفاضية عشان تتحرك</p><div class="tiles">'+
+    t.map(function(x,k){return x?'<button class="tl" data-k="'+k+'">'+x+'</button>':'<span></span>'}).join("")+
+    '</div><div class="msg'+(win()?' ok':'')+'">الحركات: '+mv+(win()?' — 🎉 برافو!':'')+'</div><button class="b pri" id="nw">لعبة جديدة</button></div>';
+  }
+  st.onclick=function(e){
+    if(e.target.id=="nw")return g15();
+    var k=e.target.dataset.k;if(k==null||win())return;
+    k=+k;if(nb(b).indexOf(k)<0)return;
+    t[b]=t[k];t[k]=0;b=k;mv++;
+    if(win()){best("g15",mv,1);boom()}
+    dr();
+  };
+  dr();
+}
+
+home();
+</script>
+</body>
+</html>
